@@ -1,0 +1,14 @@
+# Dépendances (généré par npm install, ne jamais committer)
+node_modules/
+
+# Variables d'environnement (contient tes vraies clés secrètes)
+.env
+
+# Builds Expo
+dist/
+web-build/
+.expo/
+
+# Fichiers système
+.DS_Store
+*.log

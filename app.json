@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "LEIB",
+    "slug": "leib",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0A0F1E"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "com.leib.streaming",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0F1E"
+      },
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "name": "LEIB"
+    },
+    "plugins": [
+      "expo-localization",
+      "@livekit/react-native-webrtc",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#FFD700"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a20b91f7-8d23-4d8a-ad68-a12530960684"
+      }
+    },
+    "owner": "leib-devs-team"
+  }
+}

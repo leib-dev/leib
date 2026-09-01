@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LEIB — Regarde. Gagne. Devient LEIB.</title>
+<meta name="description" content="LEIB est la plateforme de streaming vidéo qui récompense créateurs et spectateurs. Regarde. Gagne. Devient LEIB." />
+<style>
+  :root {
+    --or-principal: #FFD700;
+    --or-fonce: #D4AF37;
+    --noir-fond: #000000;
+    --bleu-nuit: #0A0F1E;
+    --blanc: #FFFFFF;
+    --gris: #A0A0A0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: linear-gradient(180deg, var(--bleu-nuit) 0%, var(--noir-fond) 100%);
+    color: var(--blanc);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+
+  .conteneur {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* --- Header --- */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--or-principal);
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  }
+
+  nav a {
+    color: var(--blanc);
+    text-decoration: none;
+    margin-left: 28px;
+    font-size: 14px;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+  }
+  nav a:hover { opacity: 1; color: var(--or-principal); }
+
+  /* --- Hero --- */
+  .hero {
+    text-align: center;
+    padding: 80px 0 60px;
+  }
+
+  .hero-logo {
+    font-size: 88px;
+    font-weight: 900;
+    color: var(--or-principal);
+    letter-spacing: 4px;
+    text-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+    margin-bottom: 12px;
+  }
+
+  .hero-slogan {
+    font-size: 22px;
+    color: var(--blanc);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .hero-souslogan {
+    font-size: 13px;
+    color: var(--or-fonce);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .boutons-hero {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .bouton-or {
+    background: var(--or-principal);
+    color: var(--noir-fond);
+    border: none;
+    padding: 16px 32px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  .bouton-or:hover { transform: translateY(-2px); }
+
+  .bouton-contour {
+    background: transparent;
+    color: var(--or-principal);
+    border: 1.5px solid var(--or-fonce);
+    padding: 16px 32px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .bouton-contour:hover { background: rgba(255, 215, 0, 0.08); }
+
+  /* --- Fonctionnalités --- */
+  .section {
+    padding: 60px 0;
+  }
+
+  .section-titre {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .section-titre span { color: var(--or-principal); }
+
+  .section-sous-titre {
+    text-align: center;
+    color: var(--gris);
+    margin-bottom: 48px;
+    font-size: 15px;
+  }
+
+  .grille-fonctionnalites {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .carte {
+    background: #151B2E;
+    border: 1px solid var(--or-fonce);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .carte-icone {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  .carte-titre {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--or-principal);
+  }
+
+  .carte-texte {
+    font-size: 14px;
+    color: var(--gris);
+  }
+
+  /* --- Monétisation --- */
+  .grille-tarifs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .tarif {
+    background: linear-gradient(135deg, #151B2E 0%, #1A2138 100%);
+    border-radius: 14px;
+    padding: 22px;
+    text-align: center;
+    border: 1px solid #232B45;
+  }
+
+  .tarif-montant {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--or-principal);
+  }
+
+  .tarif-label {
+    font-size: 13px;
+    color: var(--gris);
+    margin-top: 6px;
+  }
+
+  /* --- CTA final --- */
+  .cta-final {
+    text-align: center;
+    padding: 80px 0;
+    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.06) 0%, transparent 70%);
+  }
+
+  .cta-final h2 {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 16px;
+  }
+
+  .cta-final p {
+    color: var(--gris);
+    margin-bottom: 32px;
+  }
+
+  /* --- Footer --- */
+  footer {
+    text-align: center;
+    padding: 32px 0;
+    border-top: 1px solid #1A2138;
+    color: var(--gris);
+    font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    .hero-logo { font-size: 56px; }
+    .hero-slogan { font-size: 18px; }
+    .section-titre { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="conteneur">
+    <header>
+      <div class="logo">LEIB</div>
+      <nav>
+        <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#monetisation">Gagner de l'argent</a>
+        <a href="#telecharger">Télécharger</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-logo">LEIB</div>
+      <p class="hero-slogan">Regarde. Gagne. Devient LEIB.</p>
+      <p class="hero-souslogan">Learn · Enjoy · Inspire · Broadcast</p>
+      <div class="boutons-hero">
+        <a href="#telecharger" class="bouton-or">Télécharger l'APK</a>
+        <a href="#fonctionnalites" class="bouton-contour">Découvrir LEIB</a>
+      </div>
+    </section>
+
+    <section class="section" id="fonctionnalites">
+      <h2 class="section-titre">Une plateforme <span>qui te récompense</span></h2>
+      <p class="section-sous-titre">Créateur ou spectateur, chaque interaction sur LEIB a de la valeur.</p>
+
+      <div class="grille-fonctionnalites">
+        <div class="carte">
+          <div class="carte-icone">🎬</div>
+          <div class="carte-titre">Feed vidéo</div>
+          <div class="carte-texte">Un flux vertical fluide, façon TikTok — découvre du contenu à l'infini.</div>
+        </div>
+        <div class="carte">
+          <div class="carte-icone">💰</div>
+          <div class="carte-titre">LEIB Pay Wallet</div>
+          <div class="carte-texte">Ton portefeuille intégré. Gagne, suis ton solde, retire vers Mobile Money.</div>
+        </div>
+        <div class="carte">
+          <div class="carte-icone">🔴</div>
+          <div class="carte-titre">Live streaming</div>
+          <div class="carte-texte">Diffuse en direct, reçois des dons en temps réel de ta communauté.</div>
+        </div>
+        <div class="carte">
+          <div class="carte-icone">✔️</div>
+          <div class="carte-titre">Badges premium</div>
+          <div class="carte-texte">Badge vérifié bleu et badge VIP doré pour te démarquer.</div>
+        </div>
+        <div class="carte">
+          <div class="carte-icone">🌍</div>
+          <div class="carte-titre">Pensé pour l'Afrique</div>
+          <div class="carte-texte">CDN optimisé sur Lagos, Johannesburg et Cape Town pour une lecture rapide.</div>
+        </div>
+        <div class="carte">
+          <div class="carte-icone">🇫🇷</div>
+          <div class="carte-titre">Multilingue</div>
+          <div class="carte-texte">Interface automatiquement en français ou en anglais selon ton téléphone.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="monetisation">
+      <h2 class="section-titre">Gagne de l'argent <span>en regardant</span></h2>
+      <p class="section-sous-titre">Chaque vidéo débloquée, chaque don, chaque abonnement profite au créateur.</p>
+
+      <div class="grille-tarifs">
+        <div class="tarif">
+          <div class="tarif-montant">100 F</div>
+          <div class="tarif-label">Débloquer une vidéo<br/>50% pour le créateur</div>
+        </div>
+        <div class="tarif">
+          <div class="tarif-montant">5 000 F</div>
+          <div class="tarif-label">Abonnement créateur<br/>2 000 F pour le créateur</div>
+        </div>
+        <div class="tarif">
+          <div class="tarif-montant">10 000 F</div>
+          <div class="tarif-label">Accès à un live<br/>4 000 F pour le créateur</div>
+        </div>
+        <div class="tarif">
+          <div class="tarif-montant">60/40</div>
+          <div class="tarif-label">Répartition des dons<br/>pendant les lives</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-final" id="telecharger">
+      <h2>Prêt à devenir <span style="color: var(--or-principal);">LEIB</span> ?</h2>
+      <p>L'application Android arrive bientôt. Reste connecté.</p>
+      <a href="#" class="bouton-or">Télécharger l'APK (bientôt disponible)</a>
+    </section>
+
+    <footer>
+      &copy; 2026 LEIB — Learn Enjoy Inspire Broadcast. Tous droits réservés.
+    </footer>
+  </div>
+
+</body>
+</html>
