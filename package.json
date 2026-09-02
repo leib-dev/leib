@@ -31,7 +31,7 @@
     "expo-notifications": "~0.28.0",
     "expo-device": "~6.0.0",
     "@livekit/react-native": "^2.4.0",
-    "@livekit/react-native-webrtc": "^125.0.0"
+    "@livekit/react-native-webrtc": "^144.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"
