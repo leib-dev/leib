@@ -9,7 +9,9 @@
     "splash": {
       "backgroundColor": "#0A0F1E"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "package": "com.leib.streaming",
       "adaptiveIcon": {
@@ -29,7 +31,6 @@
     },
     "plugins": [
       "expo-localization",
-      "@livekit/react-native-webrtc",
       [
         "expo-notifications",
         {
