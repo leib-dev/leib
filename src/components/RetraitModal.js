@@ -25,10 +25,10 @@ const METHODES = [
   { id: 'stripe', label: 'Stripe' },
 ];
 
-export default function RetraitModal({ visible, onClose, userId, soldeDisponible, onSuccess }) {
+export default function RetraitModal({ visible, onClose, userId, soldeDisponible, onSuccess, numeroMomoDefaut }) {
   const [montant, setMontant] = useState('');
   const [methode, setMethode] = useState(METHODES[0].id);
-  const [contact, setContact] = useState(''); // numéro Mobile Money ou IBAN
+  const [contact, setContact] = useState(numeroMomoDefaut || ''); // numéro Mobile Money ou IBAN, pré-rempli si connu
   const [enCours, setEnCours] = useState(false);
 
   async function handleRetrait() {

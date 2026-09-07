@@ -13,7 +13,7 @@ import { account, databases, DB_ID, COLLECTIONS, ID, ADMIN_ID } from '../config/
  * Le profil créé dans la base contient le solde LEIB Pay, le rôle,
  * et les infos de base affichées sur le profil.
  */
-export async function registerUser({ email, password, pseudo, telephone }) {
+export async function registerUser({ email, password, pseudo, telephone, numeroMomo }) {
   // 1. Création du compte Appwrite (auth)
   const newAccount = await account.create(ID.unique(), email, password, pseudo);
 
@@ -33,6 +33,7 @@ export async function registerUser({ email, password, pseudo, telephone }) {
       pseudo,
       email,
       telephone: telephone || null, // requis pour recevoir les notifications SMS
+      numeroMomo: numeroMomo || null, // pour les retraits Mobile Money
       role: isAdmin ? 'admin' : 'viewer', // viewer | creator | admin
       soldeLeibPay: 0,
       badgeVerifie: false,

@@ -99,6 +99,7 @@ export default function WalletScreen() {
         userId={user?.$id}
         soldeDisponible={profile?.soldeLeibPay ?? 0}
         onSuccess={onRetraitReussi}
+        numeroMomoDefaut={profile?.numeroMomo}
       />
     </View>
   );

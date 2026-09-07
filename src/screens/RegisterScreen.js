@@ -21,6 +21,7 @@ export default function RegisterScreen({ navigation }) {
   const [pseudo, setPseudo] = useState('');
   const [email, setEmail] = useState('');
   const [telephone, setTelephone] = useState('');
+  const [numeroMomo, setNumeroMomo] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +36,7 @@ export default function RegisterScreen({ navigation }) {
     }
     setLoading(true);
     try {
-      await register(email.trim(), password, pseudo.trim(), telephone.trim());
+      await register(email.trim(), password, pseudo.trim(), telephone.trim(), numeroMomo.trim());
       // Navigation automatique vers le Feed via AppNavigator
     } catch (error) {
       Alert.alert('Inscription échouée', error.message || 'Réessaie dans un instant.');
@@ -72,6 +73,14 @@ export default function RegisterScreen({ navigation }) {
         keyboardType="phone-pad"
         value={telephone}
         onChangeText={setTelephone}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Numéro Mobile Money (pour tes retraits et achats ou dépôts)"
+        placeholderTextColor={COLORS.grisTexte}
+        keyboardType="phone-pad"
+        value={numeroMomo}
+        onChangeText={setNumeroMomo}
       />
       <TextInput
         style={styles.input}

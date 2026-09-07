@@ -51,12 +51,13 @@ export function AuthProvider({ children }) {
     enregistrerPushToken(currentAccount.$id);
   }
 
-  async function register(email, password, pseudo, telephone) {
+  async function register(email, password, pseudo, telephone, numeroMomo) {
     const { account: newAccount, profile: newProfile } = await registerUser({
       email,
       password,
       pseudo,
       telephone,
+      numeroMomo,
     });
     setUser(newAccount);
     setProfile(newProfile);
