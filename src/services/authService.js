@@ -6,6 +6,7 @@
 // dans la collection "users".
 // =====================================================
 
+import { Permission, Role } from 'react-native-appwrite';
 import { account, databases, DB_ID, COLLECTIONS, ID, ADMIN_ID } from '../config/appwrite';
 
 /**
@@ -13,7 +14,7 @@ import { account, databases, DB_ID, COLLECTIONS, ID, ADMIN_ID } from '../config/
  * Le profil créé dans la base contient le solde LEIB Pay, le rôle,
  * et les infos de base affichées sur le profil.
  */
-export async function registerUser({ email, password, pseudo, telephone, numeroMomo }) {
+export async function registerUser({ email, password, pseudo, telephone }) {
   // 1. Création du compte Appwrite (auth)
   const newAccount = await account.create(ID.unique(), email, password, pseudo);
 
@@ -25,6 +26,9 @@ export async function registerUser({ email, password, pseudo, telephone, numeroM
   const isAdmin = newAccount.$id === ADMIN_ID;
 
   // 4. Création du document profil dans la collection "users"
+  //    Permissions par document : seul cet utilisateur peut lire/modifier
+  //    son propre profil, même si la table autorise Read/Update pour "Users"
+  //    en général (Row security doit être activé sur la collection).
   const profile = await databases.createDocument(
     DB_ID,
     COLLECTIONS.USERS,
@@ -33,14 +37,17 @@ export async function registerUser({ email, password, pseudo, telephone, numeroM
       pseudo,
       email,
       telephone: telephone || null, // requis pour recevoir les notifications SMS
-      numeroMomo: numeroMomo || null, // pour les retraits Mobile Money
       role: isAdmin ? 'admin' : 'viewer', // viewer | creator | admin
       soldeLeibPay: 0,
       badgeVerifie: false,
       badgeVip: false,
       photoProfil: null,
       dateInscription: new Date().toISOString(),
-    }
+    },
+    [
+      Permission.read(Role.user(newAccount.$id)),
+      Permission.update(Role.user(newAccount.$id)),
+    ]
   );
 
   return { account: newAccount, profile };
