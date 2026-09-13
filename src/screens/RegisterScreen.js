@@ -39,7 +39,7 @@ export default function RegisterScreen({ navigation }) {
       await register(email.trim(), password, pseudo.trim(), telephone.trim(), numeroMomo.trim());
       // Navigation automatique vers le Feed via AppNavigator
     } catch (error) {
-      Alert.alert('Inscription échouée', error.message || 'Réessaie dans un instant.');
+      Alert.alert('Inscription échouée', error.message || 'Réessaie dans un instant.'); if (typeof window !== 'undefined') window.alert('ERREUR: ' + error.message);
     } finally {
       setLoading(false);
     }
