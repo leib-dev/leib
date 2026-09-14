@@ -21,6 +21,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import FeedScreen from '../screens/FeedScreen';
 import WalletScreen from '../screens/WalletScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import UploadScreen from '../screens/UploadScreen';
 import LiveScreen from '../screens/LiveScreen';
 import StartLiveScreen from '../screens/StartLiveScreen';
@@ -81,6 +82,11 @@ function TabsConnecte() {
         name="Wallet"
         component={WalletScreen}
         options={{ tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>◆</Text> }}
+      />
+      <Tab.Screen
+        name="Profil"
+        component={ProfileScreen}
+        options={{ tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>@</Text> }}
       />
       {isAdmin && (
         <Tab.Screen
