@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { COLORS, GOLD_BUTTON_SHADOW } from '../config/colors';
 import { useAuth } from '../context/AuthContext';
 import * as ImagePicker from 'expo-image-picker';
@@ -34,11 +34,15 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
     <TouchableOpacity onPress={changerPhoto} disabled={photoEnCours}>
-      <View style={styles.avatarCercle}>
-        <Text style={styles.avatarInitiale}>
-          {profile?.pseudo?.charAt(0)?.toUpperCase() || '?'}
-        </Text>
-      </View>
+      {profile?.photoProfil ? (
+        <Image source={{ uri: profile.photoProfil }} style={styles.avatarCercle} />
+      ) : (
+        <View style={styles.avatarCercle}>
+          <Text style={styles.avatarInitiale}>
+            {profile?.pseudo?.charAt(0)?.toUpperCase() || '?'}
+          </Text>
+        </View>
+      )}
       </TouchableOpacity>
       <Text style={styles.pseudo}>{profile?.pseudo || 'Utilisateur'}</Text>
       <Text style={styles.role}>{profile?.role || 'viewer'}</Text>
