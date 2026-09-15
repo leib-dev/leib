@@ -6,6 +6,7 @@
 // dans la collection "users".
 // =====================================================
 
+import { uploadImage } from './smartUpload';
 import { Permission, Role } from 'react-native-appwrite';
 import { account, databases, DB_ID, COLLECTIONS, ID, ADMIN_ID } from '../config/appwrite';
 
@@ -91,4 +92,15 @@ export async function getCurrentUserProfile() {
 
   const profile = await databases.getDocument(DB_ID, COLLECTIONS.USERS, currentAccount.$id);
   return profile;
+}
+
+/**
+ * Met a jour la photo de profil d'un utilisateur.
+ */
+export async function changerPhotoProfil(userId, photoUri) {
+  const url = await uploadImage(photoUri);
+  await databases.updateDocument(DB_ID, COLLECTIONS.USERS, userId, {
+    photoProfil: url,
+  });
+  return url;
 }

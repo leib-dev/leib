@@ -2,9 +2,31 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { COLORS, GOLD_BUTTON_SHADOW } from '../config/colors';
 import { useAuth } from '../context/AuthContext';
+import * as ImagePicker from 'expo-image-picker';
+import { changerPhotoProfil } from '../services/authService';
+import { useState } from 'react';
 
 export default function ProfileScreen() {
   const { user, profile, logout } = useAuth();
+  const [photoEnCours, setPhotoEnCours] = useState(false);
+
+  async function changerPhoto() {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) return;
+    const resultat = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+    });
+    if (resultat.canceled) return;
+    setPhotoEnCours(true);
+    try {
+      await changerPhotoProfil(user.$id, resultat.assets[0].uri);
+    } catch (error) {
+      console.warn('[Profile] Erreur photo:', error.message);
+    } finally {
+      setPhotoEnCours(false);
+    }
+  }
   async function handleLogout() {
     await logout();
   }
