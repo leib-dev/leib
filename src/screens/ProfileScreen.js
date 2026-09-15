@@ -33,11 +33,13 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <TouchableOpacity onPress={changerPhoto} disabled={photoEnCours}>
       <View style={styles.avatarCercle}>
         <Text style={styles.avatarInitiale}>
           {profile?.pseudo?.charAt(0)?.toUpperCase() || '?'}
         </Text>
       </View>
+      </TouchableOpacity>
       <Text style={styles.pseudo}>{profile?.pseudo || 'Utilisateur'}</Text>
       <Text style={styles.role}>{profile?.role || 'viewer'}</Text>
       <View style={styles.carteInfos}>
