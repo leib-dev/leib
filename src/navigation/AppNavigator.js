@@ -11,7 +11,7 @@ import React from 'react';
 import { Text, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useAuth } from '../context/AuthContext';
 import { COLORS } from '../config/colors';
 
@@ -31,7 +31,7 @@ import CallScreen from '../screens/CallScreen';
 import GlobalCallListener from '../components/GlobalCallListener';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 const LiveStack = createNativeStackNavigator();
 
 // Stack imbriqué pour l'onglet Live : liste → démarrer / regarder.
@@ -58,9 +58,11 @@ function TabsConnecte() {
       <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: COLORS.bleuNuit, borderTopColor: COLORS.orFonce },
+        tabBarStyle: { backgroundColor: COLORS.bleuNuit },
         tabBarActiveTintColor: COLORS.orPrincipal,
         tabBarInactiveTintColor: COLORS.grisTexte,
+        tabBarIndicatorStyle: { backgroundColor: COLORS.orPrincipal },
+        swipeEnabled: true,
       }}
     >
       <Tab.Screen
