@@ -1,5 +1,8 @@
 {
   "name": "push-notification",
   "version": "1.0.0",
-  "main": "src/main.js"
+  "main": "src/main.js",
+  "dependencies": {
+    "livekit-server-sdk": "^2.6.0"
+  }
 }
