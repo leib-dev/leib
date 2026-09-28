@@ -56,3 +56,12 @@ export async function uploadImage(fileUri) {
   const result = await uploadToCloudinary(fileUri, 'image');
   return result.url;
 }
+
+export async function smartUploadAudio(fileUri) {
+  const result = await uploadToCloudinary(fileUri, 'video');
+  return {
+    provider: 'cloudinary',
+    playbackUrl: result.url,
+    rawId: result.publicId,
+  };
+}

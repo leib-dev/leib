@@ -70,7 +70,7 @@ export async function publierVideo({ userId, pseudo, videoUri, legende, miniatur
  * Passe le rôle d'un utilisateur de "viewer" à "creator"
  * lors de sa première publication. Ne touche pas au rôle "admin".
  */
-async function promouvoirCreateurSiNecessaire(userId) {
+export async function promouvoirCreateurSiNecessaire(userId) {
   const profil = await databases.getDocument(DB_ID, COLLECTIONS.USERS, userId);
 
   if (profil.role === 'viewer') {

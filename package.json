@@ -19,6 +19,7 @@
     "expo": "~51.0.0",
     "expo-av": "~14.0.6",
     "expo-device": "~6.0.0",
+    "expo-document-picker": "~12.0.2",
     "expo-image-picker": "~15.0.7",
     "expo-localization": "~15.0.3",
     "expo-notifications": "~0.28.0",

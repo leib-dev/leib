@@ -27,6 +27,7 @@ export const COLLECTIONS = {
   TRANSACTIONS: process.env.EXPO_PUBLIC_APPWRITE_COL_TRANSACTIONS,
   LIVES: process.env.EXPO_PUBLIC_APPWRITE_COL_LIVES,
   CALLS: process.env.EXPO_PUBLIC_APPWRITE_COL_CALLS,
+  AUDIOS: process.env.EXPO_PUBLIC_APPWRITE_COL_AUDIOS,
 };
 
 // ID du compte administrateur LEIB (reçoit les parts admin)
