@@ -23,6 +23,7 @@ import FeedScreen from '../screens/FeedScreen';
 import WalletScreen from '../screens/WalletScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import UploadScreen from '../screens/UploadScreen';
+import AudioUploadScreen from '../screens/AudioUploadScreen';
 import LiveScreen from '../screens/LiveScreen';
 import StartLiveScreen from '../screens/StartLiveScreen';
 import LiveViewerScreen from '../screens/LiveViewerScreen';
@@ -80,6 +81,11 @@ function TabsConnecte() {
         component={UploadScreen}
         options={{ tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>+</Text> }}
       />
+        <Tab.Screen
+          name="Audio"
+          component={AudioUploadScreen}
+          options={{ tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>♪</Text> }}
+        />
       <Tab.Screen
         name="Wallet"
         component={WalletScreen}
