@@ -29,6 +29,7 @@ import StartLiveScreen from '../screens/StartLiveScreen';
 import LiveViewerScreen from '../screens/LiveViewerScreen';
 import AdminDashboardScreen from '../screens/AdminDashboardScreen';
 import CallScreen from '../screens/CallScreen';
+import CreatorProfileScreen from '../screens/CreatorProfileScreen';
 import GlobalCallListener from '../components/GlobalCallListener';
 
 const Stack = createNativeStackNavigator();
@@ -125,6 +126,11 @@ export default function AppNavigator() {
               name="Call"
               component={CallScreen}
               options={{ presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="CreatorProfile"
+              component={CreatorProfileScreen}
+              options={{ headerShown: true, title: '' }}
             />
           </>
         ) : (

@@ -128,7 +128,7 @@ export default function VideoCard({ video }) {
 
       {/* Infos créateur en bas de la vidéo */}
       <View style={styles.infosCreateur}>
-        <Text style={styles.pseudo}>@{video.createurPseudo}</Text>
+        <TouchableOpacity onPress={() => navigation.getParent()?.navigate('CreatorProfile', { creatorId: video.createurId, pseudo: video.createurPseudo })}><Text style={styles.pseudo}>@{video.createurPseudo}</Text></TouchableOpacity>
         <Text style={styles.legende} numberOfLines={2}>{video.legende}</Text>
       </View>
 
