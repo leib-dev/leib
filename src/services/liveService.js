@@ -9,7 +9,7 @@
 import { databases, DB_ID, COLLECTIONS, ID, Query, ADMIN_ID } from '../config/appwrite';
 import { obtenirTokenLive, LIVEKIT_CONFIG } from '../config/livekit';
 import { TARIFS, calculerRepartitionDon } from '../config/monetization';
-import { payerFraisFixe, crediterSolde } from './paymentService';
+import { payerFraisFixe, payerAccesLive, payerDon, crediterSolde } from './paymentService';
 import { initierPaiement, verifierPaiement } from '../config/sebpay';
 
 /**
@@ -84,35 +84,7 @@ export async function getLivesEnCours() {
  */
 export async function accederLive({ userId, pseudo, liveId, createurId, nomSalle }) {
   if (userId !== createurId) {
-    const tarif = TARIFS.ACCES_LIVE;
-    const reference = `live_acces_${liveId}_${userId}_${Date.now()}`;
-
-    const paiement = await initierPaiement({
-      montant: tarif.montant,
-      motif: 'Accès live LEIB',
-      userId,
-      reference,
-    });
-
-    const statut = await verifierPaiement(paiement.transaction_id);
-    if (statut !== 'success') {
-      throw new Error('Paiement non confirmé. Réessaie ou vérifie ton solde Mobile Money.');
-    }
-
-    await databases.createDocument(DB_ID, COLLECTIONS.TRANSACTIONS, ID.unique(), {
-      type: 'acces_live',
-      montant: tarif.montant,
-      partAdmin: tarif.partAdmin,
-      partCreateur: tarif.partCreateur,
-      payeurId: userId,
-      beneficiaireId: createurId,
-      videoId: liveId,
-      referenceSebpay: paiement.transaction_id,
-      date: new Date().toISOString(),
-    });
-
-    await crediterSolde(ADMIN_ID, tarif.partAdmin, 'accès live');
-    await crediterSolde(createurId, tarif.partCreateur, 'un spectateur a rejoint ton live');
+    await payerAccesLive({ userId, liveId, createurId });
   }
 
   const token = await obtenirTokenLive({
@@ -133,35 +105,8 @@ export async function envoyerDon({ userId, pseudo, liveId, createurId, montant }
     throw new Error('Le don minimum est de 100 F.');
   }
 
-  const { partAdmin, partCreateur } = calculerRepartitionDon(montant);
-  const reference = `don_${liveId}_${userId}_${Date.now()}`;
-
-  const paiement = await initierPaiement({
-    montant,
-    motif: 'Don pendant live LEIB',
-    userId,
-    reference,
-  });
-
-  const statut = await verifierPaiement(paiement.transaction_id);
-  if (statut !== 'success') {
-    throw new Error('Paiement du don non confirmé.');
-  }
-
-  await databases.createDocument(DB_ID, COLLECTIONS.TRANSACTIONS, ID.unique(), {
-    type: 'don_live',
-    montant,
-    partAdmin,
-    partCreateur,
-    payeurId: userId,
-    beneficiaireId: createurId,
-    videoId: liveId,
-    referenceSebpay: paiement.transaction_id,
-    date: new Date().toISOString(),
-  });
-
-  await crediterSolde(ADMIN_ID, partAdmin, 'don live');
-  await crediterSolde(createurId, partCreateur, pseudo ? `don reçu de @${pseudo}` : 'don reçu pendant ton live');
+  await payerDon({ userId, liveId, createurId, montant });
+  const { partCreateur } = calculerRepartitionDon(montant);
 
   return { success: true, partCreateur };
 }

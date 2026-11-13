@@ -1,110 +1,75 @@
-// =====================================================
+// ==============================================================
 // paymentService.js - LEIB
-// Orchestre un paiement de bout en bout :
-// 1. Initie le paiement SebPay
-// 2. Une fois confirmé, enregistre la transaction
-// 3. Répartit les gains (admin / créateur) dans les soldes
-//    LEIB Pay via Appwrite
-// =====================================================
+// Paiement de bout en bout par Moov Money (USSD autopilote).
+// Le client lance le paiement et attend. TOUT LE RESTE se fait côté SERVEUR (Vercel) :
+// confirmation du SMS Moov, enregistrement de la transaction, crédit admin / créateur.
+// L'app ne crédite plus jamais un solde pour ces paiements.
+// ==============================================================
 
-import { initierPaiement, verifierPaiement } from '../config/sebpay';
-import {
-  databases,
-  DB_ID,
-  COLLECTIONS,
-  ID,
-  ADMIN_ID,
-} from '../config/appwrite';
+import { creerPaiementMomoDirect, attendreConfirmationMomo } from './momoDirectService';
+import { databases, DB_ID, COLLECTIONS, ADMIN_ID } from '../config/appwrite';
 import { notifierGainRecu } from './notificationService';
+import { TARIFS } from '../config/monetization';
 
 /**
- * Débloque une vidéo pour un spectateur.
- * Retourne { success: true } une fois le solde créditeur mis à jour.
- *
- * @param {Object} params
- * @param {string} params.userId - Spectateur qui paie
- * @param {string} params.videoId - Vidéo à débloquer
- * @param {string} params.createurId - Créateur de la vidéo (reçoit sa part)
- * @param {Object} params.tarif - Un objet de TARIFS (ex: TARIFS.DEBLOQUER_VIDEO)
+ * Encaisse par Moov sur le numéro du profil du client. Le client confirme avec son code Moov.
+ * `action` doit être connue du serveur (voir api/_tarifs.js) ; le montant est imposé par le barème serveur.
  */
+async function encaisserMomo({ userId, montant, action, referenceCible, beneficiaireId }) {
+  const t = await creerPaiementMomoDirect({ userId, montant, action, referenceCible, beneficiaireId });
+  const statut = await attendreConfirmationMomo(t.$id);
+  if (statut === 'echoue') {
+    throw new Error("Le paiement Moov n'a pas pu être lancé. Vérifie le numéro Moov Money de ton profil.");
+  }
+  if (statut !== 'confirmé') {
+    throw new Error('Paiement non confirmé. Réessaie ou vérifie ton solde Moov Money.');
+  }
+  return t.$id;
+}
+
+/** Débloque une vidéo (100F : 50 admin / 50 créateur, réparti par le serveur). */
 export async function debloquerVideo({ userId, videoId, createurId, tarif }) {
-  const reference = `unlock_${videoId}_${userId}_${Date.now()}`;
-
-  const paiement = await initierPaiement({
-    montant: tarif.montant,
-    motif: 'Déblocage vidéo LEIB',
+  const ref = await encaisserMomo({
     userId,
-    reference,
-  });
-
-  const statut = await verifierPaiement(paiement.transaction_id);
-
-  if (statut !== 'success') {
-    throw new Error('Paiement non confirmé. Réessaie ou vérifie ton solde Mobile Money.');
-  }
-
-  await databases.createDocument(DB_ID, COLLECTIONS.TRANSACTIONS, ID.unique(), {
-    type: 'deblocage_video',
     montant: tarif.montant,
-    partAdmin: tarif.partAdmin,
-    partCreateur: tarif.partCreateur,
-    payeurId: userId,
+    action: 'deblocage_video',
+    referenceCible: videoId,
     beneficiaireId: createurId,
-    videoId,
-    referenceSebpay: paiement.transaction_id,
-    date: new Date().toISOString(),
   });
-
-  await crediterSolde(ADMIN_ID, tarif.partAdmin, 'déblocage vidéo');
-  if (tarif.partCreateur > 0) {
-    await crediterSolde(createurId, tarif.partCreateur, 'ta vidéo a été débloquée');
-  }
-
-  return { success: true };
+  return { success: true, referenceSebpay: ref };
 }
 
 /**
- * Paie des frais fixes qui vont à 100% à l'admin LEIB
- * (upload vidéo, boost, lancement live, badges...).
- * Réutilisée par uploadService et liveService, et plus
- * tard par le boost et les badges.
- *
- * @param {Object} params
- * @param {string} params.userId
- * @param {Object} params.tarif - Un objet de TARIFS (ex: TARIFS.UPLOAD_VIDEO)
- * @param {string} params.type - Type de transaction (ex: 'upload_video')
- * @param {string} params.motif - Description affichée dans la webview de paiement
+ * Frais fixes 100% admin (upload vidéo, boost, live, badges...).
+ * `type` = 'upload_video' | 'boost_video' | 'lancer_live' | 'badge_vip' | 'badge_verifie' | 'appel'
  */
-export async function payerFraisFixe({ userId, tarif, type, motif }) {
-  const reference = `${type}_${userId}_${Date.now()}`;
+export async function payerFraisFixe({ userId, tarif, type }) {
+  const ref = await encaisserMomo({ userId, montant: tarif.montant, action: type, referenceCible: null });
+  return { success: true, referenceSebpay: ref };
+}
 
-  const paiement = await initierPaiement({
-    montant: tarif.montant,
-    motif,
+/** Accès à un live (10 000F : 6 000 admin / 4 000 créateur, réparti par le serveur). */
+export async function payerAccesLive({ userId, liveId, createurId }) {
+  const ref = await encaisserMomo({
     userId,
-    reference,
+    montant: TARIFS.ACCES_LIVE.montant,
+    action: 'acces_live',
+    referenceCible: liveId,
+    beneficiaireId: createurId,
   });
+  return { success: true, referenceSebpay: ref };
+}
 
-  const statut = await verifierPaiement(paiement.transaction_id);
-  if (statut !== 'success') {
-    throw new Error('Paiement non confirmé. Réessaie ou vérifie ton solde Mobile Money.');
-  }
-
-  await databases.createDocument(DB_ID, COLLECTIONS.TRANSACTIONS, ID.unique(), {
-    type,
-    montant: tarif.montant,
-    partAdmin: tarif.partAdmin,
-    partCreateur: 0,
-    payeurId: userId,
-    beneficiaireId: ADMIN_ID,
-    videoId: null,
-    referenceSebpay: paiement.transaction_id,
-    date: new Date().toISOString(),
+/** Don pendant un live (montant libre >= 100F, réparti 60/40 par le serveur). */
+export async function payerDon({ userId, liveId, createurId, montant }) {
+  const ref = await encaisserMomo({
+    userId,
+    montant,
+    action: 'don_live',
+    referenceCible: liveId,
+    beneficiaireId: createurId,
   });
-
-  await crediterSolde(ADMIN_ID, tarif.partAdmin);
-
-  return { success: true, referenceSebpay: paiement.transaction_id };
+  return { success: true, referenceSebpay: ref };
 }
 
 /**
